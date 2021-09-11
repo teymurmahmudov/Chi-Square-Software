@@ -5,10 +5,7 @@ import pandas as pd
 
 #Data importing and processing
 
-train=pd.read_csv(r"C:\Users\teymur.mahmudov\Desktop\Kaggle\train.csv")
-train=train.drop("id",axis=1) 
-train["c"]=train.target>=train.target.mean() # Adding target column
-train["counting"]=1 # Adding a column that counts rows that categories match
+
 
 
 # First, we need to create Chi-square table that includes degree of freedom and respective critical values (rounded)
@@ -38,9 +35,17 @@ Chisquaretable={
 }
 
 
+
 # Defining a function that would calculate expected values, chi-square value and return the final result by comparing observed and expected values
 
 def show_predict_page():
+
+    path=st.text_area("your folder")
+    train=pd.read_csv(path)
+    train=train.drop("id",axis=1) 
+    train["c"]=train.target>=train.target.mean() # Adding target column
+    train["counting"]=1 # Adding a column that counts rows that categories match
+
     st.title("Chi-square Independence Test Software")
 
     st.write("""### Please, select the variables you want to test""")
@@ -48,17 +53,18 @@ def show_predict_page():
     variable=(train.columns) #features to test with target variable
 
     target=(train.columns) #target variable
-
+    
 
     #UI side: Adding dropdown menus
 
     variables = st.selectbox("Variable", variable)
     targets = st.selectbox("Target", target)
+    
 
 
     #defining action button
 
-    ok = st.button("Calculate ChiSquae")
+    ok = st.button("Get The Result")
 
     #setting action that will be generated once clicking on action button (ok)
     if ok:
@@ -96,10 +102,10 @@ def show_predict_page():
 
         if int(result)<=int(Chisquaretable[str((len(table.iloc[1,:])-1)*(len(table.iloc[:,0])-1))]):
 
-            result="Your variables are ### Independent of each others"
+            result="Your variables are Independent of each others"
         else:
-            
-            result="Your variables are ### Dependent of each others"
+
+            result="Your variables are Dependent of each others"
 
         result
         
